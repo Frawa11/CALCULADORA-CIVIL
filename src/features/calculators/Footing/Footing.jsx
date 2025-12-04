@@ -5,24 +5,29 @@ import { Save } from 'lucide-react';
 import { useBudget } from '../../../context/BudgetContext.jsx';
 
 export const Footing = () => {
-    const [length, setLength] = useState(1.0); // m
-    const [width, setWidth] = useState(1.0); // m
-    const [height, setHeight] = useState(0.6); // m
-    const [quantity, setQuantity] = useState(1); // New state for quantity
+    const [length, setLength] = useState('1.0'); // m
+    const [width, setWidth] = useState('1.0'); // m
+    const [height, setHeight] = useState('0.6'); // m
+    const [quantity, setQuantity] = useState('1'); // New state for quantity
     const [strength, setStrength] = useState('210');
 
     // Prices
-    const [priceCement, setPriceCement] = useState(0); // per bag
-    const [priceSand, setPriceSand] = useState(0); // per m3
-    const [priceStone, setPriceStone] = useState(0); // per m3
-    const [priceWater, setPriceWater] = useState(0); // per m3
+    const [priceCement, setPriceCement] = useState(''); // per bag
+    const [priceSand, setPriceSand] = useState(''); // per m3
+    const [priceStone, setPriceStone] = useState(''); // per m3
+    const [priceWater, setPriceWater] = useState(''); // per m3
 
     const [results, setResults] = useState(null);
     const { addItem } = useBudget();
 
     useEffect(() => {
-        const volumePerUnit = length * width * height;
-        const totalVolume = volumePerUnit * quantity;
+        const l = parseFloat(length) || 0;
+        const w = parseFloat(width) || 0;
+        const h = parseFloat(height) || 0;
+        const q = parseInt(quantity, 10) || 0;
+
+        const volumePerUnit = l * w * h;
+        const totalVolume = volumePerUnit * q;
         const data = STRUCTURAL_CONCRETE.find(item => item.fc === strength);
 
         if (data) {
@@ -34,10 +39,15 @@ export const Footing = () => {
             const stoneQty = data.stone * wasteVolume;
             const waterQty = data.water * wasteVolume;
 
-            const costCement = cementQty * priceCement;
-            const costSand = sandQty * priceSand;
-            const costStone = stoneQty * priceStone;
-            const costWater = waterQty * priceWater;
+            const pCement = parseFloat(priceCement) || 0;
+            const pSand = parseFloat(priceSand) || 0;
+            const pStone = parseFloat(priceStone) || 0;
+            const pWater = parseFloat(priceWater) || 0;
+
+            const costCement = cementQty * pCement;
+            const costSand = sandQty * pSand;
+            const costStone = stoneQty * pStone;
+            const costWater = waterQty * pWater;
             const totalCost = costCement + costSand + costStone + costWater;
 
             setResults({
@@ -81,19 +91,19 @@ export const Footing = () => {
             <Card title="Zapatas v2">
                 <div className="input-group">
                     <label className="label">Largo (m)</label>
-                    <input type="number" className="input" value={length} onChange={e => setLength(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" value={length} onChange={e => setLength(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Ancho (m)</label>
-                    <input type="number" className="input" value={width} onChange={e => setWidth(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" value={width} onChange={e => setWidth(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Alto (m)</label>
-                    <input type="number" className="input" value={height} onChange={e => setHeight(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" value={height} onChange={e => setHeight(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Cantidad</label>
-                    <input type="number" className="input" value={quantity} onChange={e => setQuantity(parseInt(e.target.value, 10) || 1)} />
+                    <input type="number" className="input" value={quantity} onChange={e => setQuantity(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Resistencia (f'c)</label>
@@ -113,19 +123,19 @@ export const Footing = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Cemento (bls)</label>
-                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Arena (m³)</label>
-                            <input type="number" className="input" value={priceSand} onChange={e => setPriceSand(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceSand} onChange={e => setPriceSand(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Piedra (m³)</label>
-                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Agua (m³)</label>
-                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(e.target.value)} />
                         </div>
                     </div>
                 </div>

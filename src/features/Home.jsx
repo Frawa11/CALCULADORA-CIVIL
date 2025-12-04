@@ -148,7 +148,7 @@ export const Home = () => {
                 maxWidth: '700px',
                 lineHeight: '1.6',
                 margin: '0 auto 2rem auto',
-                textAlign: 'justify'
+                textAlign: 'left'
             }}>
                 Realiza cálculos de materiales, agrégalos a un presupuesto que suma automáticamente y exporta el resultado final a Excel.
             </p>

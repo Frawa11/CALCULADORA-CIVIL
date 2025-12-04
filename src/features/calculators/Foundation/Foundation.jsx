@@ -6,27 +6,32 @@ import { useBudget } from '../../../context/BudgetContext.jsx';
 import { MATERIALS, WASTAGE } from '../../../utils/materials.js';
 
 export const Foundation = () => {
-    const [length, setLength] = useState(10); // m
-    const [width, setWidth] = useState(0.4); // m
-    const [height, setHeight] = useState(0.6); // m
+    const [length, setLength] = useState('10'); // m
+    const [width, setWidth] = useState('0.4'); // m
+    const [height, setHeight] = useState('0.6'); // m
     const [proportion, setProportion] = useState('1:10 + 30% PG');
 
     // Prices
-    const [priceCement, setPriceCement] = useState(0); // per bag
-    const [priceHormigon, setPriceHormigon] = useState(0); // per m3
-    const [priceStone, setPriceStone] = useState(0); // per m3 (Piedra Grande)
-    const [priceWater, setPriceWater] = useState(0); // per m3
+    // Prices
+    const [priceCement, setPriceCement] = useState(''); // per bag
+    const [priceHormigon, setPriceHormigon] = useState(''); // per m3
+    const [priceStone, setPriceStone] = useState(''); // per m3 (Piedra Grande)
+    const [priceWater, setPriceWater] = useState(''); // per m3
 
     const [results, setResults] = useState(null);
     const { addItem } = useBudget();
 
     useEffect(() => {
-        if (length < 0 || width < 0 || height < 0) {
+        const l = parseFloat(length) || 0;
+        const w = parseFloat(width) || 0;
+        const h = parseFloat(height) || 0;
+
+        if (l < 0 || w < 0 || h < 0) {
             setResults(null);
             return;
         }
 
-        const volume = length * width * height;
+        const volume = l * w * h;
 
         // Calculation Logic for 1:10 + 30% PG
         // 1. Calculate Yield (Rendimiento de mezcla)
@@ -58,10 +63,15 @@ export const Foundation = () => {
         const totalStone = volume * stonePerM3 * aggregateWaste;
         const totalWater = volume * waterPerM3 * aggregateWaste; // m3
 
-        const costCement = totalCement * priceCement;
-        const costHormigon = totalHormigon * priceHormigon;
-        const costStone = totalStone * priceStone;
-        const costWater = totalWater * priceWater;
+        const pCement = parseFloat(priceCement) || 0;
+        const pHormigon = parseFloat(priceHormigon) || 0;
+        const pStone = parseFloat(priceStone) || 0;
+        const pWater = parseFloat(priceWater) || 0;
+
+        const costCement = totalCement * pCement;
+        const costHormigon = totalHormigon * pHormigon;
+        const costStone = totalStone * pStone;
+        const costWater = totalWater * pWater;
         const totalCost = costCement + costHormigon + costStone + costWater;
 
         setResults({
@@ -104,15 +114,15 @@ export const Foundation = () => {
             <Card title="Cimiento Corrido">
                 <div className="input-group">
                     <label className="label">Largo (m)</label>
-                    <input type="number" className="input" min="0" value={length} onChange={e => setLength(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" min="0" value={length} onChange={e => setLength(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Ancho (m)</label>
-                    <input type="number" className="input" min="0" value={width} onChange={e => setWidth(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" min="0" value={width} onChange={e => setWidth(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Alto (m)</label>
-                    <input type="number" className="input" min="0" value={height} onChange={e => setHeight(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" min="0" value={height} onChange={e => setHeight(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Proporción</label>
@@ -126,19 +136,19 @@ export const Foundation = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Cemento (bls)</label>
-                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Hormigón (m³)</label>
-                            <input type="number" className="input" value={priceHormigon} onChange={e => setPriceHormigon(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceHormigon} onChange={e => setPriceHormigon(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Piedra Grande (m³)</label>
-                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Agua (m³)</label>
-                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(e.target.value)} />
                         </div>
                     </div>
                 </div>
