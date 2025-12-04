@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BrickWall, Droplets, PaintRoller, ArrowRight, Layers, Box, Columns as ColumnsIcon, Square, Scale, FlaskConical, Truck } from 'lucide-react';
-import { Card } from '../components/ui/Card';
+import { Card } from '../components/ui/card';
 
 const CalculatorLink = ({ to, icon: Icon, title, description, color, index }) => (
     <Link to={to} className="animate-fade-in" style={{ textDecoration: 'none', color: 'inherit', animationDelay: `${index * 0.1}s` }}>
