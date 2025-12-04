@@ -5,19 +5,19 @@ import { useBudget } from '../../../context/BudgetContext.jsx';
 
 export const WeightToVolume = () => {
     // Unit Weights (Peso Unitario Suelto) kg/m3
-    const [pusSand, setPusSand] = useState(1640);
-    const [pusStone, setPusStone] = useState(1460);
+    const [pusSand, setPusSand] = useState('1640');
+    const [pusStone, setPusStone] = useState('1460');
 
     // Humidity (%)
-    const [humSand, setHumSand] = useState(1.62);
-    const [humStone, setHumStone] = useState(0.40);
+    const [humSand, setHumSand] = useState('1.62');
+    const [humStone, setHumStone] = useState('0.40');
 
     // Weight Proportions (1 : Arena : Piedra)
-    const [propSand, setPropSand] = useState(1.78);
-    const [propStone, setPropStone] = useState(2.78);
+    const [propSand, setPropSand] = useState('1.78');
+    const [propStone, setPropStone] = useState('2.78');
 
     // Water
-    const [water, setWater] = useState(23.38); // Lts/bls
+    const [water, setWater] = useState('23.38'); // Lts/bls
 
     const [results, setResults] = useState(null);
     const { addItem } = useBudget();
@@ -27,15 +27,23 @@ export const WeightToVolume = () => {
         const CEMENT_BAG_KG = 42.5;
         const FACTOR_M3_TO_FT3 = 35.31;
 
+        const pSand = parseFloat(propSand) || 0;
+        const pStone = parseFloat(propStone) || 0;
+        const pusS = parseFloat(pusSand) || 1640;
+        const pusSt = parseFloat(pusStone) || 1460;
+        const hSand = parseFloat(humSand) || 0;
+        const hStone = parseFloat(humStone) || 0;
+        const w = parseFloat(water) || 0;
+
         // Sand Calculation
-        const weightSand = propSand * CEMENT_BAG_KG;
-        const wetPusSand = pusSand * (1 + humSand / 100);
+        const weightSand = pSand * CEMENT_BAG_KG;
+        const wetPusSand = pusS * (1 + hSand / 100);
         const volSandM3 = weightSand / wetPusSand;
         const volSandFt3 = volSandM3 * FACTOR_M3_TO_FT3;
 
         // Stone Calculation
-        const weightStone = propStone * CEMENT_BAG_KG;
-        const wetPusStone = pusStone * (1 + humStone / 100);
+        const weightStone = pStone * CEMENT_BAG_KG;
+        const wetPusStone = pusSt * (1 + hStone / 100);
         const volStoneM3 = weightStone / wetPusStone;
         const volStoneFt3 = volStoneM3 * FACTOR_M3_TO_FT3;
 
@@ -43,7 +51,7 @@ export const WeightToVolume = () => {
             volSandFt3: volSandFt3.toFixed(2),
             volStoneFt3: volStoneFt3.toFixed(2),
             volRatio: `1 : ${volSandFt3.toFixed(2)} : ${volStoneFt3.toFixed(2)}`,
-            water: water.toFixed(2)
+            water: w.toFixed(2)
         });
 
     }, [pusSand, pusStone, humSand, humStone, propSand, propStone, water]);
@@ -78,11 +86,11 @@ export const WeightToVolume = () => {
                             <div style={{ fontWeight: '600', marginBottom: '0.5rem', color: 'var(--primary)' }}>Agregado Fino</div>
                             <div style={{ marginBottom: '0.5rem' }}>
                                 <span style={{ fontSize: '0.8rem', color: '#666' }}>Peso Unit. (kg/m³)</span>
-                                <input type="number" className="input" value={pusSand} onChange={e => setPusSand(parseFloat(e.target.value))} />
+                                <input type="number" className="input" value={pusSand} onChange={e => setPusSand(e.target.value)} />
                             </div>
                             <div>
                                 <span style={{ fontSize: '0.8rem', color: '#666' }}>Humedad (%)</span>
-                                <input type="number" className="input" value={humSand} onChange={e => setHumSand(parseFloat(e.target.value))} />
+                                <input type="number" className="input" value={humSand} onChange={e => setHumSand(e.target.value)} />
                             </div>
                         </div>
 
@@ -91,11 +99,11 @@ export const WeightToVolume = () => {
                             <div style={{ fontWeight: '600', marginBottom: '0.5rem', color: 'var(--primary)' }}>Agregado Grueso</div>
                             <div style={{ marginBottom: '0.5rem' }}>
                                 <span style={{ fontSize: '0.8rem', color: '#666' }}>Peso Unit. (kg/m³)</span>
-                                <input type="number" className="input" value={pusStone} onChange={e => setPusStone(parseFloat(e.target.value))} />
+                                <input type="number" className="input" value={pusStone} onChange={e => setPusStone(e.target.value)} />
                             </div>
                             <div>
                                 <span style={{ fontSize: '0.8rem', color: '#666' }}>Humedad (%)</span>
-                                <input type="number" className="input" value={humStone} onChange={e => setHumStone(parseFloat(e.target.value))} />
+                                <input type="number" className="input" value={humStone} onChange={e => setHumStone(e.target.value)} />
                             </div>
                         </div>
                     </div>
@@ -110,15 +118,15 @@ export const WeightToVolume = () => {
                         </div>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>Ag. Fino</span>
-                            <input type="number" className="input" value={propSand} onChange={e => setPropSand(parseFloat(e.target.value))} />
+                            <input type="number" className="input" value={propSand} onChange={e => setPropSand(e.target.value)} />
                         </div>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>Ag. Grueso</span>
-                            <input type="number" className="input" value={propStone} onChange={e => setPropStone(parseFloat(e.target.value))} />
+                            <input type="number" className="input" value={propStone} onChange={e => setPropStone(e.target.value)} />
                         </div>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>Agua (Lts)</span>
-                            <input type="number" className="input" value={water} onChange={e => setWater(parseFloat(e.target.value))} />
+                            <input type="number" className="input" value={water} onChange={e => setWater(e.target.value)} />
                         </div>
                     </div>
                 </div>

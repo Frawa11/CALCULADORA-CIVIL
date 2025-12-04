@@ -9,7 +9,7 @@ const CAPACITIES = {
 };
 
 export const Transport = () => {
-    const [volume, setVolume] = useState(1); // m3
+    const [volume, setVolume] = useState('1'); // m3
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -24,25 +24,10 @@ export const Transport = () => {
                         type="number"
                         className="input"
                         value={volume}
-                        onChange={(e) => setVolume(parseFloat(e.target.value) || 0)}
+                        onChange={(e) => setVolume(e.target.value)}
                     />
                 </div>
 
-                <div className="result-box">
-                    <h4 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>Equivalencias</h4>
-                    {Object.entries(CAPACITIES).map(([name, cap]) => (
-                        <div key={name} className="result-row">
-                            <span>{name}:</span>
-                            <span className="result-value">
-                                {Math.ceil(volume / cap)} viajes
-                                <span style={{ fontSize: '0.8rem', fontWeight: 'normal', color: '#666', marginLeft: '0.5rem' }}>
-                                    ({(volume / cap).toFixed(1)})
-                                </span>
-                            </span>
-                        </div>
-                    ))}
-                </div>
-            </Card>
         </div>
     );
 };

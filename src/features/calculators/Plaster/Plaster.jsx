@@ -6,15 +6,15 @@ import { useBudget } from '../../../context/BudgetContext.jsx';
 
 export const Plaster = () => {
     const [proportion, setProportion] = useState('1:5');
-    const [length, setLength] = useState(3); // m
-    const [height, setHeight] = useState(2.5); // m
-    const [thickness, setThickness] = useState(1.5); // cm
-    const [waste, setWaste] = useState(5); // %
+    const [length, setLength] = useState('3'); // m
+    const [height, setHeight] = useState('2.5'); // m
+    const [thickness, setThickness] = useState('1.5'); // cm
+    const [waste, setWaste] = useState('5'); // %
 
     // Prices
-    const [priceCement, setPriceCement] = useState(0); // per bag
-    const [priceSand, setPriceSand] = useState(0); // per m3
-    const [priceWater, setPriceWater] = useState(0); // per m3
+    const [priceCement, setPriceCement] = useState(''); // per bag
+    const [priceSand, setPriceSand] = useState(''); // per m3
+    const [priceWater, setPriceWater] = useState(''); // per m3
 
     const [results, setResults] = useState(null);
     const { addItem } = useBudget();
@@ -22,16 +22,25 @@ export const Plaster = () => {
     useEffect(() => {
         const data = PLASTER_PROPORTIONS.find(item => item.label === proportion);
         if (data) {
-            const volume = length * height * (thickness / 100); // m3
-            const totalVolume = volume * (1 + waste / 100);
+            const l = parseFloat(length) || 0;
+            const h = parseFloat(height) || 0;
+            const t = parseFloat(thickness) || 0;
+            const w = parseFloat(waste) || 0;
+
+            const volume = l * h * (t / 100); // m3
+            const totalVolume = volume * (1 + w / 100);
 
             const cementQty = totalVolume * data.cement;
             const sandQty = totalVolume * data.sand;
             const waterQty = totalVolume * data.water; // Liters
 
-            const costCement = cementQty * priceCement;
-            const costSand = sandQty * priceSand;
-            const costWater = (waterQty / 1000) * priceWater; // Convert L to m3 for price
+            const pCement = parseFloat(priceCement) || 0;
+            const pSand = parseFloat(priceSand) || 0;
+            const pWater = parseFloat(priceWater) || 0;
+
+            const costCement = cementQty * pCement;
+            const costSand = sandQty * pSand;
+            const costWater = (waterQty / 1000) * pWater; // Convert L to m3 for price
             const totalCost = costCement + costSand + costWater;
 
             setResults({
@@ -92,7 +101,7 @@ export const Plaster = () => {
                                 type="number"
                                 className="input"
                                 value={length}
-                                onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
+                                onChange={(e) => setLength(e.target.value)}
                             />
                         </div>
                         <div>
@@ -101,7 +110,7 @@ export const Plaster = () => {
                                 type="number"
                                 className="input"
                                 value={height}
-                                onChange={(e) => setHeight(parseFloat(e.target.value) || 0)}
+                                onChange={(e) => setHeight(e.target.value)}
                             />
                         </div>
                     </div>
@@ -113,7 +122,7 @@ export const Plaster = () => {
                         type="number"
                         className="input"
                         value={thickness}
-                        onChange={(e) => setThickness(parseFloat(e.target.value) || 0)}
+                        onChange={(e) => setThickness(e.target.value)}
                         step="0.1"
                     />
                 </div>
@@ -124,7 +133,7 @@ export const Plaster = () => {
                         type="number"
                         className="input"
                         value={waste}
-                        onChange={(e) => setWaste(parseFloat(e.target.value) || 0)}
+                        onChange={(e) => setWaste(e.target.value)}
                     />
                 </div>
 
@@ -133,15 +142,15 @@ export const Plaster = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Cemento (bls)</label>
-                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Arena (m³)</label>
-                            <input type="number" className="input" value={priceSand} onChange={e => setPriceSand(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceSand} onChange={e => setPriceSand(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Agua (m³)</label>
-                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(e.target.value)} />
                         </div>
                     </div>
                 </div>

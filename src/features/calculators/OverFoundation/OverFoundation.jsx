@@ -4,25 +4,30 @@ import { Save } from 'lucide-react';
 import { useBudget } from '../../../context/BudgetContext.jsx';
 
 export const OverFoundation = () => {
-    const [length, setLength] = useState(10); // m
-    const [width, setWidth] = useState(0.25); // m
-    const [height, setHeight] = useState(0.4); // m
+    const [length, setLength] = useState('10'); // m
+    const [width, setWidth] = useState('0.25'); // m
+    const [height, setHeight] = useState('0.4'); // m
     const [proportion, setProportion] = useState('1:8 + 25% PM');
 
     // Prices
-    const [priceCement, setPriceCement] = useState(0); // per bag
-    const [priceHormigon, setPriceHormigon] = useState(0); // per m3
-    const [priceStone, setPriceStone] = useState(0); // per m3 (Piedra Mediana)
-    const [priceWater, setPriceWater] = useState(0); // per m3
+    // Prices
+    const [priceCement, setPriceCement] = useState(''); // per bag
+    const [priceHormigon, setPriceHormigon] = useState(''); // per m3
+    const [priceStone, setPriceStone] = useState(''); // per m3 (Piedra Mediana)
+    const [priceWater, setPriceWater] = useState(''); // per m3
 
     const [results, setResults] = useState(null);
     const { addItem } = useBudget();
 
     useEffect(() => {
-        const volume = length * width * height;
+        const l = parseFloat(length) || 0;
+        const w = parseFloat(width) || 0;
+        const h = parseFloat(height) || 0;
+
+        const volume = l * w * h;
 
         // Formwork area (Encofrado) = 2 * Height * Length
-        const formwork = 2 * height * length;
+        const formwork = 2 * h * l;
 
         // Materials for 1:8 + 25% PM (Piedra Mediana)
         // Factors from Excel "Materiales en Sobrecimiento..xlsx"
@@ -33,10 +38,15 @@ export const OverFoundation = () => {
         const stone = volume * 0.42; // Piedra Mediana
         const water = volume * 0.13; // Agua
 
-        const costCement = cement * priceCement;
-        const costHormigon = hormigon * priceHormigon;
-        const costStone = stone * priceStone;
-        const costWater = water * priceWater;
+        const pCement = parseFloat(priceCement) || 0;
+        const pHormigon = parseFloat(priceHormigon) || 0;
+        const pStone = parseFloat(priceStone) || 0;
+        const pWater = parseFloat(priceWater) || 0;
+
+        const costCement = cement * pCement;
+        const costHormigon = hormigon * pHormigon;
+        const costStone = stone * pStone;
+        const costWater = water * pWater;
         const totalCost = costCement + costHormigon + costStone + costWater;
 
         setResults({
@@ -81,15 +91,15 @@ export const OverFoundation = () => {
             <Card title="Sobrecimiento">
                 <div className="input-group">
                     <label className="label">Largo (m)</label>
-                    <input type="number" className="input" value={length} onChange={e => setLength(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" value={length} onChange={e => setLength(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Ancho (m)</label>
-                    <input type="number" className="input" value={width} onChange={e => setWidth(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" value={width} onChange={e => setWidth(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Alto (m)</label>
-                    <input type="number" className="input" value={height} onChange={e => setHeight(parseFloat(e.target.value) || 0)} />
+                    <input type="number" className="input" value={height} onChange={e => setHeight(e.target.value)} />
                 </div>
                 <div className="input-group">
                     <label className="label">Proporción</label>
@@ -103,19 +113,19 @@ export const OverFoundation = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Cemento (bls)</label>
-                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Hormigón (m³)</label>
-                            <input type="number" className="input" value={priceHormigon} onChange={e => setPriceHormigon(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceHormigon} onChange={e => setPriceHormigon(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Piedra Mediana (m³)</label>
-                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Agua (m³)</label>
-                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(e.target.value)} />
                         </div>
                     </div>
                 </div>

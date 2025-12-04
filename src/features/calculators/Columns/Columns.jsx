@@ -15,48 +15,55 @@ const STEEL_WEIGHTS = {
 };
 
 export const Columns = () => {
-    const [count, setCount] = useState(1);
-    const [length, setLength] = useState(0.30); // m (Largo)
-    const [width, setWidth] = useState(0.25); // m (Ancho)
-    const [height, setHeight] = useState(3.0); // m (Alto)
+    const [count, setCount] = useState('1');
+    const [length, setLength] = useState('0.30'); // m (Largo)
+    const [width, setWidth] = useState('0.25'); // m (Ancho)
+    const [height, setHeight] = useState('3.0'); // m (Alto)
     const [strength, setStrength] = useState('210');
 
     // Steel
     const [longSteelType, setLongSteelType] = useState('5/8"');
     const [longSteelCount, setLongSteelCount] = useState(4);
     const [stirrupType, setStirrupType] = useState('3/8"');
-    const [stirrupSpacing, setStirrupSpacing] = useState(0.20); // m
+    const [stirrupSpacing, setStirrupSpacing] = useState('0.20'); // m
 
     // Prices
-    const [priceCement, setPriceCement] = useState(0); // per bag
-    const [priceSand, setPriceSand] = useState(0); // per m3
-    const [priceStone, setPriceStone] = useState(0); // per m3
-    const [priceWater, setPriceWater] = useState(0); // per m3
-    const [priceSteel, setPriceSteel] = useState(0); // per kg
+    // Prices
+    const [priceCement, setPriceCement] = useState(''); // per bag
+    const [priceSand, setPriceSand] = useState(''); // per m3
+    const [priceStone, setPriceStone] = useState(''); // per m3
+    const [priceWater, setPriceWater] = useState(''); // per m3
+    const [priceSteel, setPriceSteel] = useState(''); // per kg
 
     const [results, setResults] = useState(null);
     const { addItem } = useBudget();
 
     useEffect(() => {
+        const c = parseInt(count, 10) || 0;
+        const l = parseFloat(length) || 0;
+        const w = parseFloat(width) || 0;
+        const h = parseFloat(height) || 0;
+        const sSpacing = parseFloat(stirrupSpacing) || 0.20;
+
         // Concrete
-        const volumePerCol = length * width * height;
-        const totalVolume = volumePerCol * count;
+        const volumePerCol = l * w * h;
+        const totalVolume = volumePerCol * c;
         const concreteData = STRUCTURAL_CONCRETE.find(item => item.fc === strength);
 
         // Formwork (Encofrado) = Perimeter * Height * Count
-        const perimeter = 2 * (length + width);
-        const formwork = perimeter * height * count;
+        const perimeter = 2 * (l + w);
+        const formwork = perimeter * h * c;
 
         // Steel
         // Longitudinal: Height * Count * Weight * Number of bars
-        const longSteelTotalLen = height * longSteelCount * count;
+        const longSteelTotalLen = h * longSteelCount * c;
         const longSteelWeight = longSteelTotalLen * STEEL_WEIGHTS[longSteelType] * 1.05; // +5% waste
 
         // Stirrups (Estribos)
         // Length per stirrup = Perimeter - (cover * 4) + hooks. Approx Perimeter + 0.20m
         const stirrupLen = perimeter + 0.20;
-        const stirrupsPerCol = Math.ceil(height / stirrupSpacing);
-        const totalStirrups = stirrupsPerCol * count;
+        const stirrupsPerCol = sSpacing > 0 ? Math.ceil(h / sSpacing) : 0;
+        const totalStirrups = stirrupsPerCol * c;
         const stirrupWeight = totalStirrups * stirrupLen * STEEL_WEIGHTS[stirrupType] * 1.05; // +5% waste
 
         if (concreteData) {
@@ -76,11 +83,17 @@ export const Columns = () => {
             const stoneQty = concreteData.stone * wasteVolume;
             const waterQty = concreteData.water * wasteVolume;
 
-            const costCement = cementQty * priceCement;
-            const costSand = sandQty * priceSand;
-            const costStone = stoneQty * priceStone;
-            const costWater = waterQty * priceWater;
-            const costSteel = totalSteelWeight * priceSteel;
+            const pCement = parseFloat(priceCement) || 0;
+            const pSand = parseFloat(priceSand) || 0;
+            const pStone = parseFloat(priceStone) || 0;
+            const pWater = parseFloat(priceWater) || 0;
+            const pSteel = parseFloat(priceSteel) || 0;
+
+            const costCement = cementQty * pCement;
+            const costSand = sandQty * pSand;
+            const costStone = stoneQty * pStone;
+            const costWater = waterQty * pWater;
+            const costSteel = totalSteelWeight * pSteel;
             const totalCost = costCement + costSand + costStone + costWater + costSteel;
 
             setResults({
@@ -130,22 +143,22 @@ export const Columns = () => {
             <Card title="Columnas">
                 <div className="input-group">
                     <label className="label">Cantidad de Columnas</label>
-                    <input type="number" className="input" value={count} onChange={e => setCount(parseInt(e.target.value) || 1)} />
+                    <input type="number" className="input" value={count} onChange={e => setCount(e.target.value)} />
                 </div>
 
                 <div className="input-group">
                     <label className="label">Largo (m)</label>
-                    <input type="number" className="input" value={length} onChange={e => setLength(parseFloat(e.target.value) || 0)} step="0.01" />
+                    <input type="number" className="input" value={length} onChange={e => setLength(e.target.value)} step="0.01" />
                 </div>
 
                 <div className="input-group">
                     <label className="label">Ancho (m)</label>
-                    <input type="number" className="input" value={width} onChange={e => setWidth(parseFloat(e.target.value) || 0)} step="0.01" />
+                    <input type="number" className="input" value={width} onChange={e => setWidth(e.target.value)} step="0.01" />
                 </div>
 
                 <div className="input-group">
                     <label className="label">Alto (m)</label>
-                    <input type="number" className="input" value={height} onChange={e => setHeight(parseFloat(e.target.value) || 0)} step="0.01" />
+                    <input type="number" className="input" value={height} onChange={e => setHeight(e.target.value)} step="0.01" />
                 </div>
 
                 <div className="input-group">
@@ -173,7 +186,7 @@ export const Columns = () => {
                         <select className="select" value={stirrupType} onChange={e => setStirrupType(e.target.value)}>
                             {Object.keys(STEEL_WEIGHTS).map(k => <option key={k} value={k}>{k}</option>)}
                         </select>
-                        <input type="number" className="input" placeholder="Esp. (m)" value={stirrupSpacing} onChange={e => setStirrupSpacing(parseFloat(e.target.value))} step="0.05" />
+                        <input type="number" className="input" placeholder="Esp. (m)" value={stirrupSpacing} onChange={e => setStirrupSpacing(e.target.value)} step="0.05" />
                     </div>
                 </div>
 
@@ -182,23 +195,23 @@ export const Columns = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Cemento (bls)</label>
-                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Arena (m³)</label>
-                            <input type="number" className="input" value={priceSand} onChange={e => setPriceSand(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceSand} onChange={e => setPriceSand(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Piedra (m³)</label>
-                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Agua (m³)</label>
-                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Acero (kg)</label>
-                            <input type="number" className="input" value={priceSteel} onChange={e => setPriceSteel(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceSteel} onChange={e => setPriceSteel(e.target.value)} />
                         </div>
                     </div>
                 </div>

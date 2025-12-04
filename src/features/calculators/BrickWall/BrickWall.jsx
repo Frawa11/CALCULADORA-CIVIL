@@ -10,16 +10,16 @@ import cantoImg from '../../../assets/images/brick_canto.png';
 
 export const BrickWall = () => {
     // Dimensions in cm
-    const [length, setLength] = useState(23); // King Kong standard
-    const [height, setHeight] = useState(9);
-    const [thickness, setThickness] = useState(12.5);
-    const [joint, setJoint] = useState(1.5);
-    const [waste, setWaste] = useState(5); // %
-    const [area, setArea] = useState(1); // m2
+    const [length, setLength] = useState('23'); // King Kong standard
+    const [height, setHeight] = useState('9');
+    const [thickness, setThickness] = useState('12.5');
+    const [joint, setJoint] = useState('1.5');
+    const [waste, setWaste] = useState('5'); // %
+    const [area, setArea] = useState('1'); // m2
 
     // Prices
-    const [priceBrick, setPriceBrick] = useState(0); // per unit
-    const [priceMortar, setPriceMortar] = useState(0); // per m3
+    const [priceBrick, setPriceBrick] = useState(''); // per unit
+    const [priceMortar, setPriceMortar] = useState(''); // per m3
 
     const [results, setResults] = useState(null);
     const [patternResults, setPatternResults] = useState(null);
@@ -28,10 +28,17 @@ export const BrickWall = () => {
     const { addItem } = useBudget();
 
     useEffect(() => {
-        const l_m = length / 100;
-        const h_m = height / 100;
-        const t_m = thickness / 100;
-        const j_m = joint / 100;
+        const l = parseFloat(length) || 0;
+        const h = parseFloat(height) || 0;
+        const t = parseFloat(thickness) || 0;
+        const j = parseFloat(joint) || 0;
+        const w = parseFloat(waste) || 0;
+        const a = parseFloat(area) || 0;
+
+        const l_m = l / 100;
+        const h_m = h / 100;
+        const t_m = t / 100;
+        const j_m = j / 100;
 
         // Bricks per m2 formula: 1 / ((L + J) * (H + J))
         const bricksPerM2 = 1 / ((l_m + j_m) * (h_m + j_m));
@@ -42,8 +49,8 @@ export const BrickWall = () => {
         const mortarVolPerM2 = wallVolPerM2 - bricksVolPerM2;
 
         // Totals with waste
-        const totalBricks = Math.ceil(bricksPerM2 * area * (1 + waste / 100));
-        const totalMortar = mortarVolPerM2 * area * (1 + waste / 100);
+        const totalBricks = Math.ceil(bricksPerM2 * a * (1 + w / 100));
+        const totalMortar = mortarVolPerM2 * a * (1 + w / 100);
 
         setResults({
             bricksUnit: bricksPerM2.toFixed(2),
@@ -55,15 +62,15 @@ export const BrickWall = () => {
         // Calculate for the three standard patterns using dynamic dimensions
         // TIPO SOGA: Largo x Alto (thickness is wall width)
         const sogaBricks = 1 / ((l_m + j_m) * (h_m + j_m));
-        const sogaBricksWithWaste = Math.ceil(sogaBricks * (1 + waste / 100));
+        const sogaBricksWithWaste = Math.ceil(sogaBricks * (1 + w / 100));
 
         // TIPO CABEZA: Ancho x Alto (length is wall width)
         const cabezaBricks = 1 / ((t_m + j_m) * (h_m + j_m));
-        const cabezaBricksWithWaste = Math.ceil(cabezaBricks * (1 + waste / 100));
+        const cabezaBricksWithWaste = Math.ceil(cabezaBricks * (1 + w / 100));
 
         // TIPO CANTO: Largo x Ancho (height is wall width)
         const cantoBricks = 1 / ((l_m + j_m) * (t_m + j_m));
-        const cantoBricksWithWaste = Math.ceil(cantoBricks * (1 + waste / 100));
+        const cantoBricksWithWaste = Math.ceil(cantoBricks * (1 + w / 100));
 
         setPatternResults({
             soga: { base: sogaBricks.toFixed(2), withWaste: sogaBricksWithWaste },
@@ -77,11 +84,15 @@ export const BrickWall = () => {
         if (!results || !patternResults) return;
 
         const patternData = patternResults[selectedPattern];
-        const totalBricks = includeWaste ? patternData.withWaste : Math.ceil(patternData.base * area);
-        const totalMortar = includeWaste ? results.totalMortar : (results.mortarUnit * area).toFixed(3);
+        const a = parseFloat(area) || 0;
+        const totalBricks = includeWaste ? patternData.withWaste : Math.ceil(patternData.base * a);
+        const totalMortar = includeWaste ? results.totalMortar : (results.mortarUnit * a).toFixed(3);
 
-        const costBricks = (totalBricks * priceBrick).toFixed(2);
-        const costMortar = (totalMortar * priceMortar).toFixed(2);
+        const pBrick = parseFloat(priceBrick) || 0;
+        const pMortar = parseFloat(priceMortar) || 0;
+
+        const costBricks = (totalBricks * pBrick).toFixed(2);
+        const costMortar = (totalMortar * pMortar).toFixed(2);
         const totalCost = (parseFloat(costBricks) + parseFloat(costMortar)).toFixed(2);
 
         addItem({
@@ -102,12 +113,16 @@ export const BrickWall = () => {
     // Calculate current costs for display
     const getCurrentCosts = () => {
         if (!results || !patternResults) return { bricks: 0, mortar: 0, total: 0 };
+        const a = parseFloat(area) || 0;
         const patternData = patternResults[selectedPattern];
-        const totalBricks = includeWaste ? patternData.withWaste : Math.ceil(patternData.base * area);
-        const totalMortar = includeWaste ? results.totalMortar : (results.mortarUnit * area).toFixed(3);
+        const totalBricks = includeWaste ? patternData.withWaste : Math.ceil(patternData.base * a);
+        const totalMortar = includeWaste ? results.totalMortar : (results.mortarUnit * a).toFixed(3);
 
-        const costBricks = (totalBricks * priceBrick).toFixed(2);
-        const costMortar = (totalMortar * priceMortar).toFixed(2);
+        const pBrick = parseFloat(priceBrick) || 0;
+        const pMortar = parseFloat(priceMortar) || 0;
+
+        const costBricks = (totalBricks * pBrick).toFixed(2);
+        const costMortar = (totalMortar * pMortar).toFixed(2);
         const total = (parseFloat(costBricks) + parseFloat(costMortar)).toFixed(2);
 
         return { bricks: costBricks, mortar: costMortar, total };
@@ -123,32 +138,32 @@ export const BrickWall = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: '#666' }}>Largo</span>
-                            <input type="number" className="input" value={length} onChange={e => setLength(Number(e.target.value))} />
+                            <input type="number" className="input" value={length} onChange={e => setLength(e.target.value)} />
                         </div>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: '#666' }}>Alto</span>
-                            <input type="number" className="input" value={height} onChange={e => setHeight(Number(e.target.value))} />
+                            <input type="number" className="input" value={height} onChange={e => setHeight(e.target.value)} />
                         </div>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: '#666' }}>Ancho</span>
-                            <input type="number" className="input" value={thickness} onChange={e => setThickness(Number(e.target.value))} />
+                            <input type="number" className="input" value={thickness} onChange={e => setThickness(e.target.value)} />
                         </div>
                     </div>
                 </div>
 
                 <div className="input-group">
                     <label className="label">Junta (cm)</label>
-                    <input type="number" className="input" value={joint} onChange={e => setJoint(Number(e.target.value))} step="0.1" />
+                    <input type="number" className="input" value={joint} onChange={e => setJoint(e.target.value)} step="0.1" />
                 </div>
 
                 <div className="input-group">
                     <label className="label">Área de Muro (m²)</label>
-                    <input type="number" className="input" value={area} onChange={e => setArea(Number(e.target.value))} />
+                    <input type="number" className="input" value={area} onChange={e => setArea(e.target.value)} />
                 </div>
 
                 <div className="input-group">
                     <label className="label">Desperdicio (%)</label>
-                    <input type="number" className="input" value={waste} onChange={e => setWaste(Number(e.target.value))} />
+                    <input type="number" className="input" value={waste} onChange={e => setWaste(e.target.value)} />
                 </div>
 
                 <h4 style={{ fontSize: '1rem', fontWeight: '600', marginTop: '1rem', marginBottom: '0.5rem' }}>Precios Unitarios (S/.)</h4>
@@ -156,11 +171,11 @@ export const BrickWall = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Ladrillo (und)</label>
-                            <input type="number" className="input" value={priceBrick} onChange={e => setPriceBrick(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceBrick} onChange={e => setPriceBrick(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Mortero (m³)</label>
-                            <input type="number" className="input" value={priceMortar} onChange={e => setPriceMortar(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceMortar} onChange={e => setPriceMortar(e.target.value)} />
                         </div>
                     </div>
                 </div>
@@ -326,7 +341,7 @@ export const BrickWall = () => {
                         <div style={{ textAlign: 'right' }}>
                             <div className="result-value" style={{ fontSize: '1.2rem', color: '#dc2626' }}>
                                 {patternResults && patternResults[selectedPattern] ?
-                                    (includeWaste ? patternResults[selectedPattern].withWaste : Math.ceil(patternResults[selectedPattern].base * area))
+                                    (includeWaste ? patternResults[selectedPattern].withWaste : Math.ceil(patternResults[selectedPattern].base * (parseFloat(area) || 0)))
                                     : 0} und
                             </div>
                             <div style={{ fontSize: '0.8rem', color: '#666' }}>S/. {currentCosts.bricks}</div>
@@ -336,7 +351,7 @@ export const BrickWall = () => {
                         <span>Total Mortero:</span>
                         <div style={{ textAlign: 'right' }}>
                             <div className="result-value">
-                                {includeWaste ? results.totalMortar : (results.mortarUnit * area).toFixed(3)} m³
+                                {includeWaste ? results.totalMortar : (results.mortarUnit * (parseFloat(area) || 0)).toFixed(3)} m³
                             </div>
                             <div style={{ fontSize: '0.8rem', color: '#666' }}>S/. {currentCosts.mortar}</div>
                         </div>

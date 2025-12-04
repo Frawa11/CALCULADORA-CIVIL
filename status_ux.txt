@@ -1,0 +1,21 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   final_verify_deps.txt
+	new file:   final_verify_deps_2.txt
+	new file:   final_verify_ui.txt
+	new file:   install_log.txt
+	new file:   log_deps.txt
+	modified:   node_modules/.package-lock.json
+	modified:   src/features/Home.jsx
+	modified:   src/features/calculators/Footing/Footing.jsx
+	modified:   src/features/calculators/Foundation/Foundation.jsx
+	new file:   status_deps.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	final_verify_ux.txt
+	status_ux.txt
+

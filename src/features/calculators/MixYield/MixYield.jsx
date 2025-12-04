@@ -5,20 +5,20 @@ import { useBudget } from '../../../context/BudgetContext.jsx';
 
 export const MixYield = () => {
     // Inputs
-    const [propCement, setPropCement] = useState(1);
-    const [propSand, setPropSand] = useState(2);
-    const [propStone, setPropStone] = useState(4);
-    const [waterPerBag, setWaterPerBag] = useState(25); // Liters per bag
-    const [freshConcreteDensity, setFreshConcreteDensity] = useState(2400); // kg/m3
+    const [propCement, setPropCement] = useState('1');
+    const [propSand, setPropSand] = useState('2');
+    const [propStone, setPropStone] = useState('4');
+    const [waterPerBag, setWaterPerBag] = useState('25'); // Liters per bag
+    const [freshConcreteDensity, setFreshConcreteDensity] = useState('2400'); // kg/m3
 
     // Prices & Densities for Cost Calc
-    const [priceCement, setPriceCement] = useState(0); // per bag
-    const [priceSand, setPriceSand] = useState(0); // per m3
-    const [priceStone, setPriceStone] = useState(0); // per m3
-    const [priceWater, setPriceWater] = useState(0); // per m3
+    const [priceCement, setPriceCement] = useState(''); // per bag
+    const [priceSand, setPriceSand] = useState(''); // per m3
+    const [priceStone, setPriceStone] = useState(''); // per m3
+    const [priceWater, setPriceWater] = useState(''); // per m3
 
-    const [densitySand, setDensitySand] = useState(1600); // kg/m3 (loose)
-    const [densityStone, setDensityStone] = useState(1500); // kg/m3 (loose)
+    const [densitySand, setDensitySand] = useState('1600'); // kg/m3 (loose)
+    const [densityStone, setDensityStone] = useState('1500'); // kg/m3 (loose)
 
     const [results, setResults] = useState(null);
     const { addItem } = useBudget();
@@ -28,21 +28,26 @@ export const MixYield = () => {
         // Basis: 1 bag of cement (42.5 kg)
         const CEMENT_BAG_KG = 42.5;
 
+        const pSand = parseFloat(propSand) || 0;
+        const pStone = parseFloat(propStone) || 0;
+        const wPerBag = parseFloat(waterPerBag) || 0;
+        const fDensity = parseFloat(freshConcreteDensity) || 2400;
+
         // 1. Calculate Weight of Batch (Peso de la colada)
         const weightCement = CEMENT_BAG_KG;
-        const weightSand = propSand * CEMENT_BAG_KG;
-        const weightStone = propStone * CEMENT_BAG_KG;
-        const weightWater = waterPerBag; // 1 Lt = 1 kg
+        const weightSand = pSand * CEMENT_BAG_KG;
+        const weightStone = pStone * CEMENT_BAG_KG;
+        const weightWater = wPerBag; // 1 Lt = 1 kg
 
         const totalBatchWeight = weightCement + weightSand + weightStone + weightWater;
 
         // 2. Yield per Bag (Rendimiento por bolsa)
         // Formula: Total Weight / Fresh Concrete Density
-        const yieldPerBag = totalBatchWeight / freshConcreteDensity;
+        const yieldPerBag = totalBatchWeight / fDensity;
 
         // 3. Cement Factor (Factor cemento)
         // Formula: Fresh Concrete Density / Total Weight (or 1 / yield)
-        const cementFactor = freshConcreteDensity / totalBatchWeight;
+        const cementFactor = fDensity / totalBatchWeight;
 
         // 4. Materials per m3 (kg)
         const cementPerM3_kg = cementFactor * weightCement;
@@ -52,19 +57,26 @@ export const MixYield = () => {
 
         // 5. Costs per m3
         // Cement: kg -> bags
+        const pCement = parseFloat(priceCement) || 0;
+        const pSandPrice = parseFloat(priceSand) || 0;
+        const pStonePrice = parseFloat(priceStone) || 0;
+        const pWaterPrice = parseFloat(priceWater) || 0;
+        const dSand = parseFloat(densitySand) || 1600;
+        const dStone = parseFloat(densityStone) || 1500;
+
         const cementBags = cementPerM3_kg / CEMENT_BAG_KG;
-        const costCement = cementBags * priceCement;
+        const costCement = cementBags * pCement;
 
         // Aggregates: kg -> m3 (using loose density)
-        const sandM3 = sandPerM3_kg / densitySand;
-        const costSand = sandM3 * priceSand;
+        const sandM3 = sandPerM3_kg / dSand;
+        const costSand = sandM3 * pSandPrice;
 
-        const stoneM3 = stonePerM3_kg / densityStone;
-        const costStone = stoneM3 * priceStone;
+        const stoneM3 = stonePerM3_kg / dStone;
+        const costStone = stoneM3 * pStonePrice;
 
         // Water: L -> m3
         const waterM3 = waterPerM3_L / 1000;
-        const costWater = waterM3 * priceWater;
+        const costWater = waterM3 * pWaterPrice;
 
         const totalCostPerM3 = costCement + costSand + costStone + costWater;
 
@@ -119,11 +131,11 @@ export const MixYield = () => {
                         </div>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>Ag. Fino</span>
-                            <input type="number" className="input" value={propSand} onChange={e => setPropSand(parseFloat(e.target.value))} />
+                            <input type="number" className="input" value={propSand} onChange={e => setPropSand(e.target.value)} />
                         </div>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>Ag. Grueso</span>
-                            <input type="number" className="input" value={propStone} onChange={e => setPropStone(parseFloat(e.target.value))} />
+                            <input type="number" className="input" value={propStone} onChange={e => setPropStone(e.target.value)} />
                         </div>
                     </div>
                 </div>
@@ -132,11 +144,11 @@ export const MixYield = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>
                             <label className="label">Agua por Bolsa (Lt)</label>
-                            <input type="number" className="input" value={waterPerBag} onChange={e => setWaterPerBag(parseFloat(e.target.value))} />
+                            <input type="number" className="input" value={waterPerBag} onChange={e => setWaterPerBag(e.target.value)} />
                         </div>
                         <div>
                             <label className="label">Peso Concreto Fresco (kg/m³)</label>
-                            <input type="number" className="input" value={freshConcreteDensity} onChange={e => setFreshConcreteDensity(parseFloat(e.target.value))} />
+                            <input type="number" className="input" value={freshConcreteDensity} onChange={e => setFreshConcreteDensity(e.target.value)} />
                         </div>
                     </div>
                 </div>
@@ -146,29 +158,29 @@ export const MixYield = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Cemento (bls)</label>
-                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Ag. Fino (m³)</label>
-                            <input type="number" className="input" value={priceSand} onChange={e => setPriceSand(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceSand} onChange={e => setPriceSand(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Ag. Grueso (m³)</label>
-                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceStone} onChange={e => setPriceStone(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Agua (m³)</label>
-                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(e.target.value)} />
                         </div>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.7rem', color: 'var(--text-light)' }}>Densidad Ag. Fino (kg/m³)</label>
-                            <input type="number" className="input" style={{ fontSize: '0.8rem', padding: '0.3rem' }} value={densitySand} onChange={e => setDensitySand(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" style={{ fontSize: '0.8rem', padding: '0.3rem' }} value={densitySand} onChange={e => setDensitySand(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.7rem', color: 'var(--text-light)' }}>Densidad Ag. Grueso (kg/m³)</label>
-                            <input type="number" className="input" style={{ fontSize: '0.8rem', padding: '0.3rem' }} value={densityStone} onChange={e => setDensityStone(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" style={{ fontSize: '0.8rem', padding: '0.3rem' }} value={densityStone} onChange={e => setDensityStone(e.target.value)} />
                         </div>
                     </div>
                 </div>

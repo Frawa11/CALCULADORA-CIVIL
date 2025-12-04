@@ -5,27 +5,32 @@ import { Save } from 'lucide-react';
 import { useBudget } from '../../../context/BudgetContext.jsx';
 
 export const ConcreteDosage = () => {
-    const [volume, setVolume] = useState(1);
+    const [volume, setVolume] = useState('1');
     const [proportion, setProportion] = useState('1:8');
 
     // Prices
-    const [priceCement, setPriceCement] = useState(0); // per bag
-    const [priceHormigon, setPriceHormigon] = useState(0); // per m3
-    const [priceWater, setPriceWater] = useState(0); // per m3
+    const [priceCement, setPriceCement] = useState(''); // per bag
+    const [priceHormigon, setPriceHormigon] = useState(''); // per m3
+    const [priceWater, setPriceWater] = useState(''); // per m3
 
     const [results, setResults] = useState(null);
     const { addItem } = useBudget();
 
     useEffect(() => {
+        const vol = parseFloat(volume) || 0;
         const data = CONCRETE_PROPORTIONS.find(item => item.label === proportion);
         if (data) {
-            const cementQty = data.cement * volume;
-            const hormigonQty = data.hormigon * volume;
-            const waterQty = data.water * volume;
+            const cementQty = data.cement * vol;
+            const hormigonQty = data.hormigon * vol;
+            const waterQty = data.water * vol;
 
-            const costCement = cementQty * priceCement;
-            const costHormigon = hormigonQty * priceHormigon;
-            const costWater = waterQty * priceWater;
+            const pCement = parseFloat(priceCement) || 0;
+            const pHormigon = parseFloat(priceHormigon) || 0;
+            const pWater = parseFloat(priceWater) || 0;
+
+            const costCement = cementQty * pCement;
+            const costHormigon = hormigonQty * pHormigon;
+            const costWater = waterQty * pWater;
             const totalCost = costCement + costHormigon + costWater;
 
             setResults({
@@ -80,7 +85,7 @@ export const ConcreteDosage = () => {
                         type="number"
                         className="input"
                         value={volume}
-                        onChange={(e) => setVolume(parseFloat(e.target.value) || 0)}
+                        onChange={(e) => setVolume(e.target.value)}
                         min="0"
                         step="0.1"
                     />
@@ -91,15 +96,15 @@ export const ConcreteDosage = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Cemento (bls)</label>
-                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceCement} onChange={e => setPriceCement(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Hormigón (m³)</label>
-                            <input type="number" className="input" value={priceHormigon} onChange={e => setPriceHormigon(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceHormigon} onChange={e => setPriceHormigon(e.target.value)} />
                         </div>
                         <div>
                             <label className="label" style={{ fontSize: '0.8rem' }}>Agua (m³)</label>
-                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(parseFloat(e.target.value) || 0)} />
+                            <input type="number" className="input" value={priceWater} onChange={e => setPriceWater(e.target.value)} />
                         </div>
                     </div>
                 </div>
