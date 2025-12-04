@@ -3,6 +3,9 @@ import { useBudget } from '../../context/BudgetContext';
 import { Card } from '../../components/ui/card.jsx';
 import { Trash2, FileSpreadsheet } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import { Capacitor } from '@capacitor/core';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 export const BudgetView = () => {
     const { items, removeItem, clearBudget } = useBudget();
@@ -110,7 +113,35 @@ export const BudgetView = () => {
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Presupuesto");
-        XLSX.writeFile(wb, "Presupuesto_Civil_Ordenado.xlsx");
+
+        if (Capacitor.isNativePlatform()) {
+            try {
+                const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+                const fileName = 'Presupuesto_Civil.xlsx';
+
+                Filesystem.writeFile({
+                    path: fileName,
+                    data: wbout,
+                    directory: Directory.Cache
+                }).then((result) => {
+                    Share.share({
+                        title: 'Presupuesto Civil',
+                        text: 'Aquí está tu presupuesto exportado.',
+                        url: result.uri,
+                        dialogTitle: 'Compartir Presupuesto',
+                    });
+                }).catch((e) => {
+                    console.error("Error writing file", e);
+                    alert("Error al guardar el archivo: " + e.message);
+                });
+
+            } catch (e) {
+                console.error("Export failed", e);
+                alert("Error al exportar: " + e.message);
+            }
+        } else {
+            XLSX.writeFile(wb, "Presupuesto_Civil_Ordenado.xlsx");
+        }
     };
 
     return (

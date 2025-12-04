@@ -5,7 +5,7 @@ import { Card } from '../components/ui/card';
 
 const CalculatorLink = ({ to, icon: Icon, title, description, color, index }) => (
     <Link to={to} className="animate-fade-in" style={{ textDecoration: 'none', color: 'inherit', animationDelay: `${index * 0.1}s` }}>
-        <Card className="hover-card" style={{ height: '100%', transition: 'transform 0.2s' }}>
+        <Card className="hover-card" style={{ height: '100%', transition: 'transform 0.2s', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                 <div style={{
                     background: color,
@@ -20,7 +20,7 @@ const CalculatorLink = ({ to, icon: Icon, title, description, color, index }) =>
                 </div>
                 <div style={{ flex: 1 }}>
                     <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.25rem' }}>{title}</h3>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>{description}</p>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-light)', letterSpacing: '-0.01em', lineHeight: '1.5' }}>{description}</p>
                 </div>
                 <ArrowRight size={20} style={{ color: 'var(--text-light)', alignSelf: 'center' }} />
             </div>

@@ -1,0 +1,27 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   android/gradlew
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    files.txt
+	deleted:    git_diag.txt
+	deleted:    git_log.txt
+	deleted:    log.txt
+	modified:   node_modules/.package-lock.json
+	deleted:    push_log.txt
+	deleted:    status.txt
+	deleted:    verify_dir.txt
+	deleted:    verify_log.txt
+	deleted:    verify_status.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	final_verify_android_3.txt
+	final_verify_perms.txt
+	status_perms.txt
+

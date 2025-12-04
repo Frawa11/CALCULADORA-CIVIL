@@ -1,0 +1,27 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	deleted:    files.txt
+	new file:   final_verify_android_3.txt
+	new file:   final_verify_perms.txt
+	new file:   final_verify_perms_2.txt
+	deleted:    git_diag.txt
+	deleted:    git_log.txt
+	deleted:    log.txt
+	new file:   log_perms.txt
+	modified:   node_modules/.package-lock.json
+	deleted:    push_log.txt
+	modified:   src/features/Home.jsx
+	modified:   src/features/budget/BudgetView.jsx
+	deleted:    status.txt
+	new file:   status_perms.txt
+	deleted:    verify_dir.txt
+	deleted:    verify_log.txt
+	deleted:    verify_status.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	status_ui.txt
+

@@ -1,0 +1,5 @@
+commit 7ccc46b80abd4903d7272b1dd9759c3c6d0450c6
+Author: j3233758-debug <j3233758@gmail.com>
+Date:   Wed Dec 3 23:47:58 2025 -0500
+
+    FixGradlewPerms
