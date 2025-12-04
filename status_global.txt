@@ -1,0 +1,23 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   final_verify_ux.txt
+	new file:   final_verify_ux_2.txt
+	new file:   log_ux.txt
+	modified:   src/features/calculators/BrickWall/BrickWall.jsx
+	modified:   src/features/calculators/Columns/Columns.jsx
+	modified:   src/features/calculators/ConcreteDosage/ConcreteDosage.jsx
+	modified:   src/features/calculators/MixYield/MixYield.jsx
+	modified:   src/features/calculators/OverFoundation/OverFoundation.jsx
+	modified:   src/features/calculators/Plaster/Plaster.jsx
+	modified:   src/features/calculators/Transport/Transport.jsx
+	modified:   src/features/calculators/WeightToVolume/WeightToVolume.jsx
+	new file:   status_ux.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	final_verify_global.txt
+	status_global.txt
+

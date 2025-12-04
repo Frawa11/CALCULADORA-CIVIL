@@ -28,6 +28,21 @@ export const Transport = () => {
                     />
                 </div>
 
+                <div className="result-box">
+                    <h4 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>Equivalencias</h4>
+                    {Object.entries(CAPACITIES).map(([name, cap]) => (
+                        <div key={name} className="result-row">
+                            <span>{name}:</span>
+                            <span className="result-value">
+                                {Math.ceil((parseFloat(volume) || 0) / cap)} viajes
+                                <span style={{ fontSize: '0.8rem', fontWeight: 'normal', color: '#666', marginLeft: '0.5rem' }}>
+                                    {((parseFloat(volume) || 0) / cap).toFixed(1)}
+                                </span>
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </Card>
         </div>
     );
 };
