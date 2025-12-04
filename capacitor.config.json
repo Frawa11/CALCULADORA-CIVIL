@@ -1,0 +1,8 @@
+{
+    "appId": "com.frawa11.calculadoracivil",
+    "appName": "Calculadora Civil",
+    "webDir": "dist",
+    "server": {
+        "androidScheme": "https"
+    }
+}
