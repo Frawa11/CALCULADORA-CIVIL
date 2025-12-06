@@ -111,7 +111,7 @@ export const WeightToVolume = () => {
 
                 <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem' }}>Dosificación en Peso</h4>
                 <div className="input-group">
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.5rem', alignItems: 'end' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', alignItems: 'end' }}>
                         <div>
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>Cemento</span>
                             <input type="number" className="input" value={1} disabled style={{ backgroundColor: 'var(--background)', color: 'var(--text)' }} />
